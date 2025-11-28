@@ -14,8 +14,7 @@ export const usersToGroup = pgTable(
     userId: integer('userId').references(() => users.id),
     groupId: text('groupId').references(() => groups.id),
   },
-  (table) => ({
+  (table) =>
     //composite key
-    pk: primaryKey({ columns: [table.groupId, table.userId] }),
-  }),
+    [primaryKey({ columns: [table.groupId, table.userId] })],
 );
