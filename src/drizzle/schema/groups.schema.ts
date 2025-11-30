@@ -1,4 +1,4 @@
-import { pgTable, serial, text, integer } from 'drizzle-orm/pg-core';
+import { pgTable, text, integer, index, serial } from 'drizzle-orm/pg-core';
 import { users } from './users.schema';
 import { primaryKey } from 'drizzle-orm/pg-core';
 
@@ -11,10 +11,16 @@ export const groups = pgTable('groups', {
 export const usersToGroup = pgTable(
   'usersToGroup',
   {
-    userId: integer('userId').references(() => users.id),
-    groupId: text('groupId').references(() => groups.id),
+    userId: integer('userId')
+      .references(() => users.id)
+      .notNull(),
+
+    groupId: integer('groupId')
+      .references(() => groups.id)
+      .notNull(),
   },
-  (table) =>
-    //composite key
-    [primaryKey({ columns: [table.groupId, table.userId] })],
+  (table) => [
+    primaryKey({ columns: [table.groupId, table.userId] }),
+    index('userIdIndex').on(table.userId),
+  ],
 );
