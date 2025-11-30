@@ -3,7 +3,6 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import { type DrizzleDB } from 'src/drizzle/types/drizzle';
-import { posts } from 'src/drizzle/schema/posts.schema';
 
 @Injectable()
 export class PostService {
@@ -14,7 +13,10 @@ export class PostService {
   }
 
   async findAll() {
-    return await this.db.select().from(posts);
+    // return await this.db.select().from(posts);
+    return await this.db.query.posts.findMany({
+      with: { author: { with: { userToGroup: { with: { group: true } } } } },
+    });
   }
 
   findOne(id: number) {
