@@ -28,8 +28,19 @@ export class PostService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(id: number) {
+    return await this.db.query.posts.findFirst({
+      where: eq(posts.id, id),
+      with: {
+        author: {
+          with: {
+            userToGroup: {
+              with: { group: true },
+            },
+          },
+        },
+      },
+    });
   }
 
   async update(id: number, updatePostDto: UpdatePostDto) {
