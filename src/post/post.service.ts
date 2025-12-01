@@ -16,7 +16,6 @@ export class PostService {
 
   async findAll() {
     return await this.db.query.posts.findMany({
-      where: eq(posts.id, 1),
       with: {
         author: {
           with: {
@@ -33,8 +32,11 @@ export class PostService {
     return `This action returns a #${id} post`;
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
+  async update(id: number, updatePostDto: UpdatePostDto) {
+    return await this.db
+      .update(posts)
+      .set({ title: 'updated data' })
+      .where(eq(posts.id, id));
   }
 
   remove(id: number) {
