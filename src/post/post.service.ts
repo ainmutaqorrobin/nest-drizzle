@@ -39,7 +39,7 @@ export class PostService {
       .where(eq(posts.id, id));
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async remove(id: number) {
+    return await this.db.delete(posts).where(eq(posts.id, id));
   }
 }
